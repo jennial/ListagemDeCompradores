@@ -1,0 +1,60 @@
+﻿@model List<ClienteModel> 
+@{
+    ViewData["Title"] = "Página Inicial";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Bem Vindo!</h1>
+        <p>
+            Consulte os seus Clientes cadastrados na
+            sua Loja ou realize o cadastro de novos Cliente!
+        </p>
+        <label>Selecione a opção desejada:</label>
+    <div class="d-grid gap-2 d-md-flex justify-content-center">
+        <a type="button" class="btn btn-success float-right m-2" asp-controller="Cliente" asp-action="Index">Lista de Clientes</a>
+        <a type="button" class="btn btn-success float-right m-2" asp-controller="Cliente" asp-action="Cadastrar">Cadastrar Clientes</a>
+    </div>
+        
+  @*  <button type="button" class="btn btn-success float-right m-2">Filtros</button>
+
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Nome/Razáo Social</th>
+                <th scope="col">E-mail</th>
+                <th scope="col">Telefone</th>
+                <th scope="col">Data de cadastro</th>
+                <th scope="col">Bloqueado</th>
+                <th scope="col"></th>
+
+            </tr>
+        </thead>
+        <tbody>
+            
+            @if(Model != null && Model.Any())
+            {
+                foreach(ClienteModel item in Model)
+                {
+                    <tr>
+                        <th scope="row">2</th>
+                        <td>@item.Nome</td>
+                        <td>@item.Email</td>
+                        <td>@item.Telefone</td>
+                        <td>@item.DtaCadastro</td>
+                        <td>@item.Bloqueio</td>
+                        <td>
+                            <a role="button" class="btn btn-info" asp-route-id="@item.Id" asp-controller="Cliente" asp-action="Editar">Editar</a>
+                        </td>
+
+                    </tr>
+
+                }
+            }             
+
+         
+        </tbody>
+    </table>*@
+</div>
