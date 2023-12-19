@@ -12,6 +12,7 @@ namespace ListagemdeCompradores.Repositorios
         ClienteModel Adicionar(ClienteModel cliente);
 
         ClienteModel Atualizar(ClienteModel cliente);
+        List<ClienteModel> VerificaEmailDB(string email, string documento, string inscricaoEstadual);
         List<ClienteModel> FiltrarClientes(string Nome, string Email, string Telefone, DateTime dtaCadastro, bool Bloqueado);
     }
 }

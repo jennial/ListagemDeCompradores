@@ -14,6 +14,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Microsoft.Extensions.Options;
 using ListagemdeCompradores.Repositorios;
 using AspNetCoreHero.ToastNotification;
+using PagedList;
 
 namespace ListagemdeCompradores
 {

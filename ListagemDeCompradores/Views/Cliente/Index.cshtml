@@ -1,21 +1,22 @@
-﻿@using PagedList.Mvc;
-@model PagedList.IPagedList<ClienteModel> 
+﻿@model List<ClienteModel>
+
 @{
     ViewData["Title"] = "Página Inicial";
 }
 
 <div class="text-center">
     <h1 class="display-4">Lista de Clientes Cadastrados </h1>
-   
+
     <div class="d-grid gap-2 d-md-flex justify-content-end">
-        <a type="button" class="btn btn-success float-right m-2" asp-controller="Cliente" asp-action="Cadastrar">Cadastrar Novo</a>
+        <a type="button" class="btn btn-primary float-right m-2" asp-controller="Cliente" asp-action="Cadastrar">Cadastrar Cliente</a>
         <button type="button" class="btn btn-primary float-right m-2" data-toggle="modal" data-target="#exampleModal">
-            Filtros
-    </button>
+           Adicionar Filtros
+        </button>
+        <a type="button" class="btn btn-success float-right m-2" asp-controller="Cliente" asp-action="Index">Limpar Filtros</a>
     </div>
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <form method="post" action="@Url.Action("Index", "Cliente")">  
+        <form method="post" action="@Url.Action("Index", "Cliente")">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -26,43 +27,63 @@
                     </div>
                     <div class="modal-body">
                         <label>Nome/Razao Social</label>
-                        <input type="text" name="Nome" class="form-control" id="inputNome" maxlength="150">
-                    </div> 
+                        <input type="text" name="Nome" class="form-control" id="inputNome" maxlength="150" placeholder="Digite o nome ou razão social do cliente">
+                    </div>
                     <div class="modal-body">
                         <label>E-mail</label>
-                        <input type="text" name="Email" class="form-control" id="inputEmail" maxlength="150">
+                        <input type="text" name="Email" class="form-control" id="inputEmail" maxlength="150" placeholder="Digite o e-mail do cliente">
                     </div>
                     <div class="modal-body">
                         <label>Telefone</label>
-                        <input type="text" name="Telefone" class="form-control" id="inputTelefone">
-                    </div> 
+                        <input type="text" name="Telefone" class="form-control" id="inputTelefone" placeholder="Digite o telefone do cliente">
+                    </div>
                     <div class="modal-body">
                         <label>Data Cadastro</label>
                         <input type="date" name="DtaCadastro" id="inputDtaCadastro" class="form-control">
-                    </div>  
+                    </div>
+                    
                     <div class="modal-body">
-                        <input class="form-check-input" name="Bloqueio" type="checkbox" value="true" id="bloqueio">
                         <label class="form-check-label">
                             Cliente Bloqueado?
                         </label>
+                        <div>
+                            <label>
+                                <input class="form-check-input" type="radio" name="Bloqueio" value="true" id="bloqueioSim">
+                                Sim
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input class="form-check-input" type="radio" name="Bloqueio" value="false" id="bloqueioNao">
+                                Não
+                            </label>
+                        </div>
                     </div>
-            
+
+
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                         <button type="button" onclick="limparFiltros()" class="btn btn-primary">Limpar Filtros</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="submit" class="btn btn-primary">Filtrar</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
                     </div>
+
 
                 </div>
             </div>
-            </form>
-        
+        </form>
     </div>
 
     <table class="table">
         <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="selecionarTodos" onclick="selecionarTodos()">
+                        <label class="form-check-label">
+                            Selecionar Todos
+                        </label>
+                    </div>
+                </th>
                 <th scope="col">Nome/Razáo Social</th>
                 <th scope="col">E-mail</th>
                 <th scope="col">Telefone</th>
@@ -73,13 +94,17 @@
             </tr>
         </thead>
         <tbody>
-            
-            @if(Model != null && Model.Any())
+
+            @if (Model != null && Model.Any())
             {
-                foreach(ClienteModel item in Model)
+                foreach (ClienteModel item in Model)
                 {
                     <tr>
-                        <th scope="row">></th>
+                        <td>
+                            <div class="form-check">
+                                <input class="form-check-input selecionarRegistro" type="checkbox" value="@item.Id">
+                            </div>
+                        </td>
                         <td>@item.Nome</td>
                         <td>@item.Email</td>
                         <td>@item.Telefone</td>
@@ -92,21 +117,178 @@
                     </tr>
 
                 }
-            }             
+            }
 
-         
+
         </tbody>
     </table>
 </div>
 
-Page@(Model.PageCount < Model.PageNumber? 0:Model.PageNumber)of Model.PageCount
-@Html.PagedListPager(Model, PagedList => Url.Action("Idex", new{page))
 <script>
     function limparFiltros() {
         document.getElementById("inputNome").value = "";
         document.getElementById("inputEmail").value = "";
         document.getElementById("inputTelefone").value = "";
-        document.getElementById("inputDtaCadastro").value = default(DateTime);
+        document.getElementById("inputDtaCadastro").value = default (DateTime);
         document.getElementById("bloqueio").checked = false;
+    }
+    function selecionarTodos() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var checkboxSelecionarTodos = document.getElementById('selecionarTodos');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = checkboxSelecionarTodos.checked;
+        }
+    }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            restoreCheckboxState();
+
+            document.querySelector("[data-target='#exampleModal']").addEventListener("click", function () {
+                clearFilters();
+            });
+
+            document.getElementById('selecionarTodos').addEventListener('click', function () {
+                toggleSelectAll();
+            });
+
+            var checkboxes = document.getElementsByClassName('selecionarRegistro');
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].addEventListener('change', function () {
+                    saveCheckboxState();
+                });
+            }
+        });
+
+    function toggleSelectAll() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var checkboxSelecionarTodos = document.getElementById('selecionarTodos');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = checkboxSelecionarTodos.checked;
+        }
+
+        saveCheckboxState();
+    }
+
+    function clearFilters() {
+        document.getElementById("inputNome").value = "";
+        document.getElementById("inputEmail").value = "";
+        document.getElementById("inputTelefone").value = "";
+        document.getElementById("inputDtaCadastro").value = "";
+        document.getElementById("bloqueio").checked = false;
+    }
+
+    function saveCheckboxState() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var checkboxState = {};
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxState[checkboxes[i].value] = checkboxes[i].checked;
+        }
+
+        localStorage.setItem('checkboxState', JSON.stringify(checkboxState));
+    }
+
+    function restoreCheckboxState() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var storedState = localStorage.getItem('checkboxState');
+
+        if (storedState) {
+            storedState = JSON.parse(storedState);
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                checkboxes[i].checked = storedState[checkboxes[i].value] || false;
+            }
+        }
+    }
+</script>
+
+
+
+</script>
+
+<div>
+
+    Página @ViewData["PageNumber"] de @ViewData["TotalPages"]
+</div>
+<div class="d-flex justify-content-center">
+
+    <div class="pagination">
+
+        @if ((int)ViewData["PageNumber"] > 1)
+        {
+            <a href="@Url.Action("Index", new { page = (int)ViewData["PageNumber"] - 1 })" class="btn btn-primary">Anterior</a>
+        }
+    </div>
+
+    <div class="m-1 pagination">
+
+        @for (int i = 1; i <= (int)ViewData["TotalPages"]; i++)
+        {
+            <a href="@Url.Action("Index", new { page = i })" class="@(i == (int)ViewData["PageNumber"] ? "active btn btn-primary" : "btn btn-primary")">@i</a>
+        }
+    </div>
+
+    <div class="pagination">
+
+        @if ((int)ViewData["PageNumber"] < (int)ViewData["TotalPages"])
+        {
+            <a href="@Url.Action("Index", new { page = (int)ViewData["PageNumber"] + 1 })" class="btn btn-primary">Próxima</a>
+        }
+
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        restoreCheckboxState();
+
+        document.getElementById('selecionarTodos').addEventListener('click', function () {
+            toggleSelectAll();
+        });
+
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].addEventListener('change', function () {
+                saveCheckboxState();
+            });
+        }
+    });
+
+    function toggleSelectAll() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var checkboxSelecionarTodos = document.getElementById('selecionarTodos');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = checkboxSelecionarTodos.checked;
+        }
+
+        saveCheckboxState();
+    }
+
+    function saveCheckboxState() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var checkboxState = {};
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxState[checkboxes[i].value] = checkboxes[i].checked;
+        }
+
+        localStorage.setItem('checkboxState', JSON.stringify(checkboxState));
+    }
+
+    function restoreCheckboxState() {
+        var checkboxes = document.getElementsByClassName('selecionarRegistro');
+        var storedState = localStorage.getItem('checkboxState');
+
+        if (storedState) {
+            storedState = JSON.parse(storedState);
+
+            for (var i = 0; i < checkboxes.length; i++) {
+                var checkbox = checkboxes[i];
+                checkbox.checked = storedState[checkbox.value] || false;
+            }
+        }
     }
 </script>

@@ -1,108 +1,99 @@
 ﻿@model ClienteModel
-@{
-    
-    //string senha = Request.Form["InputPassword1"];
-    //string confirmarSenha = Request.Form["InputPassword2"];
 
-    //if (!string.IsNullOrEmpty(senha) && !string.IsNullOrEmpty(confirmarSenha))
-    //{
-    //    if (senha != confirmarSenha)
-    //    {
-    //        <div class="alert alert-danger" role="alert">
-    //            As senhas não coincidem!
-    //        </div>
-    //}}
-
-  }
-
-<head>
-    <head>
-        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.6/jquery.inputmask.min.js"></script>
-    </head>
-
-</head>
 
 <body>
 
     <h1>Cadastro de Cliente</h1>
-    
+
     <form asp-controller="Cliente" asp-action="Cadastrar" method="post">
         <div class="form-group">
-            <label >Nome/Razao Social</label>
-            <input type="text" asp-for="Nome" class="form-control" id="inputNome" tooltip="Enter email" maxlength="150">
+            <label data-toggle="tooltip" data-placement="top" title="Nome completo ou Razão Social">Nome/Razao Social</label>
+            <input type="text" asp-for="Nome" class="form-control" id="inputNome" placeholder="Digite seu nome ou razão social" maxlength="150">
             @Html.ValidationMessageFor(msg => msg.Nome)
         </div>
         <div class="form-group">
-            <label >Email address</label>
-            <input type="email" asp-for="Email" class="form-control" id="exampleInputEmail1" maxlength="150" aria-describedby="emailHelp" placeholder="Enter email">
+            <label data-toggle="tooltip" data-placement="top" title="E-mail do cliente">Email address</label>
+            <input type="email" asp-for="Email" class="form-control" id="exampleInputEmail1" maxlength="150" aria-describedby="emailHelp" placeholder="Digite seu e-mail">
             @Html.ValidationMessageFor(msg => msg.Email)
 
         </div>
         <div class="form-group">
-            <label >Telefone</label>
-            <input type="text" asp-for="Telefone" class="form-control telefone" id="inputTel">
+            <label data-toggle="tooltip" data-placement="top" title="Telefone do Cliente">Telefone</label>
+            <input type="text" asp-for="Telefone" class="form-control telefone" id="inputTel" maxlength="11" placeholder="Digite seu telefone">
             @Html.ValidationMessageFor(msg => msg.Telefone)
 
         </div>
         <div class="form-group">
-            <label >Data Cadastro</label>
-            <input type="date" asp-for="DtaCadastro" disabled value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="inputdtaCadastro">
+            <label>Data Cadastro</label>
+            <input type="date" asp-for="DtaCadastro" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="inputdtaCadastro">
         </div>
 
 
         <h3>Informações Pessoais</h3>
 
         <div class="form-check">
-            <input class="form-check-input" asp-for="TipoPessoa" type="radio" name="tipoPessoa" id="Radios1" value="1" checked>
-            <label class="form-check-label" >
+            <label data-toggle="tooltip" data-placement="top" title="Selecione o Tipo de Pessoa">Tipo de Pessoa</label>
+            <br />
+            <input class="form-check-input" asp-for="TipoPessoa" type="radio" name="tipoPessoa" id="tipoPessoaFisica" value="1" checked>
+            <label class="form-check-label">
                 Pessoa Física
             </label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" asp-for="TipoPessoa" type="radio" name="tipoPessoa" id="Radios2" value="2">
+            <input class="form-check-input" asp-for="TipoPessoa" type="radio" name="tipoPessoa" id="tipoPessoaJuridica" value="2">
             <label class="form-check-label">
                 Pessoa Jurídica
             </label>
         </div>
+        <br />
+
+        <!-- pessoa fisica -->
+        <div id="pessoaFisica">
+
+            <label>Gênero:</label>
+            <div class="form-check-inline">
+                <input class="form-check-input" asp-for="Genero" type="radio" name="genero" id="Radios1" value="F" checked>
+                <label class="form-check-label" for="Radios1">
+                    Feminino
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <input class="form-check-input" asp-for="Genero" type="radio" name="genero" id="Radios2" value="M">
+                <label class="form-check-label" for="Radios2">
+                    Masculino
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <input class="form-check-input" asp-for="Genero" type="radio" name="genero" id="Radios3" value="O">
+                <label class="form-check-label" for="Radios3">
+                    Outros
+                </label>
+            </div>
+
+            <div class="form-group">
+                <label data-toggle="tooltip" data-placement="top" title="Insira a Data de Nascimento">Data Nascimento</label>
+                <input type="date" asp-for="DtaNascimento" value="@DateTime.Now.ToString("yyyy-MM-dd")" class="form-control" id="inputdtaNascimento">
+            </div>
+
+        </div>
+        <br />
         <div class="form-group">
-            <label for="inputDoc">CNPJ/CPF</label>
-            <input type="number" class="form-control" id="inputDoc" asp-for="Documento" maxlength="14">
+            <label for="inputDoc" data-toggle="tooltip" data-placement="top" title="Insira o CPF ou o CNPJ do Cliente">CNPJ/CPF</label>
+            <input type="text" class="form-control" id="inputDoc" asp-for="Documento" maxlength="14" oninput="formatarDocumento()">
             @Html.ValidationMessageFor(msg => msg.Documento)
 
         </div>
 
+
         <div class="form-group">
-            <label for="inputIE">Inscrição Estadual</label>
+            <label for="inputIE" data-toggle="tooltip" data-placement="top" title="Incrição Estadual do Cliente, selecionar Isento caso assim for">Inscrição Estadual</label>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" asp-for="Isento" value="true" id="isento">
-                <label class="form-check-label" >
+                <input class="form-check-input" type="checkbox" asp-for="Isento" checked id="isento" maxlength="12" onchange="verificaIE()">
+                <label class="form-check-label">
                     Isento?
                 </label>
             </div>
-            <input type="number" class="form-control" id="inputIE" asp-for="InscricaoEstadual" maxlength="14">
-        </div>
-
-        <!-- pessoa fisica -->
-        <label>Gênero:</label>
-        <div class="form-check-inline">
-            <input class="form-check-input" asp-for="Genero" type="radio" name="genero" id="Radios1" value="F" checked>
-            <label class="form-check-label" for="Radios1">
-                Feminino
-            </label>
-        </div>
-        <div class="form-check-inline">
-            <input class="form-check-input" asp-for="Genero" type="radio" name="genero" id="Radios2" value="M">
-            <label class="form-check-label" for="Radios2">
-                Masculino
-            </label>
-        </div>
-        <div class="form-check-inline">
-            <input class="form-check-input" asp-for="Genero" type="radio" name="genero" id="Radios3" value="O">
-            <label class="form-check-label" for="Radios3">
-                Outros
-            </label>
+            <input type="text" class="form-control" id="inputIE" asp-for="InscricaoEstadual" maxlength="14" disabled="true">
         </div>
 
         <div class="form-check">
@@ -113,8 +104,8 @@
         </div>
         <br />
         <div class="form-group">
-            <label >Senha</label>
-            <input type="password" asp-for="Senha" class="form-control" id="InputPassword1" placeholder="Password">
+            <label data-toggle="tooltip" data-placement="top" title="Cadastre a senha de acesso do Cliente">Senha</label>
+            <input type="password" asp-for="Senha" class="form-control" id="InputPassword1" placeholder="senha">
             @Html.ValidationMessageFor(msg => msg.Senha)
 
             <small>*A senha deve conter no mínimo 8 caracteres e no máximo 15.</small>
@@ -122,17 +113,109 @@
 
         <div class="form-group">
             <label for="InputPassword2">Confirmar Senha</label>
-            <input type="password" class="form-control" id="InputPassword2" placeholder="Confirmar Senha" onkeyup="checkPasswordMatch();">
-            <small id="passwordMatchMessage"></small>
+            <input type="password" asp-for="confirmarSenha" class="form-control" name="confirmarSenha" placeholder="Confirmar Senha">
+            @Html.ValidationMessageFor(msg => msg.confirmarSenha)
+
         </div>
 
         <div class="d-flex justify-content-end">
             <button type="submit" class="btn btn-primary">Salvar</button>
             <a class="btn btn-secondary ml-2" asp-controller="Home" asp-action="Index" role="button">Voltar</a>
         </div>
+        <button type="button" onclick="esconderDiv()">Esconder Div</button>
 
     </form>
 
- 
-</body>
 
+    <script>
+
+        function formatarDocumento(documento, tipoPessoa) {
+            documento = documento.replace(/\D/g, '');
+
+            if (tipoPessoa === '1' && documento.length === 11) {
+                documento = documento.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+                pessoaFisica.style.display = 'block';
+            } else if (tipoPessoa === '2' && documento.length === 14) {
+                documento = documento.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, '$1.$2.$3/$4-$5');
+                pessoaFisica.style.display = 'none';
+
+            }
+
+            return documento;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var campoDocumento = document.getElementById('inputDoc');
+            var tipoPessoaRadioButtons = document.getElementsByName('tipoPessoa');
+
+            tipoPessoaRadioButtons.forEach(function (radioButton) {
+                radioButton.addEventListener('change', function () {
+                    campoDocumento.value = formatarDocumento(campoDocumento.value, this.value);
+
+                });
+            });
+
+            campoDocumento.addEventListener('input', function () {
+                var tipoPessoaSelecionado = document.querySelector('input[name="tipoPessoa"]:checked').value;
+                campoDocumento.value = formatarDocumento(campoDocumento.value, tipoPessoaSelecionado);
+            });
+        });
+
+
+
+        function formatarTelefone(telefone) {
+            telefone = telefone.replace(/\D/g, '');
+
+            telefone = telefone.replace(/(\d{2})(\d{4,5})(\d{4})/, '($1) $2-$3');
+
+            return telefone;
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var campoTelefone = document.getElementById('inputTel');
+
+            campoTelefone.addEventListener('input', function () {
+                campoTelefone.value = formatarTelefone(campoTelefone.value);
+            });
+        });
+
+
+        function verificaIE() {
+            var checkbox = document.getElementById("isento");
+            var inputIE = document.getElementById("inputIE");
+
+            inputIE.disabled = checkbox.checked;
+
+            if (checkbox.checked) {
+                inputIE.value = "";
+            }
+        }
+
+        function verificaPessoa() {
+            var fisica = document.getElementById("tipoPessoaFisica");
+            var juridica = document.getElementById("tipoPessoaJuridica");
+            var pessoaFisica = document.getElementById("pessoaFisica");
+
+            if (fisica.checked) {
+                pessoaFisica.style.display = 'block';
+            } else if (juridica.checked) {
+                pessoaFisica.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            var tipoPessoaRadioButtons = document.getElementsByName('tipoPessoa');
+
+            tipoPessoaRadioButtons.forEach(function (radioButton) {
+                radioButton.addEventListener('change', function () {
+                    verificaPessoa();
+                });
+            });
+
+            verificaPessoa();
+        });
+
+    </script>
+
+
+</body>

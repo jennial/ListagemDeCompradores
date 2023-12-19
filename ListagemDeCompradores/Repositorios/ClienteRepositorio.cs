@@ -16,7 +16,7 @@ namespace ListagemdeCompradores.Repositorios
         public ClienteModel Adicionar(ClienteModel cliente)
         {
             _bancoContext.Cliente.Add(cliente);
-            _bancoContext.SaveChanges();    
+            _bancoContext.SaveChanges();
             return cliente;
         }
 
@@ -35,11 +35,23 @@ namespace ListagemdeCompradores.Repositorios
             clienteDB.InscricaoEstadual = cliente.InscricaoEstadual;
             clienteDB.TipoPessoa = cliente.TipoPessoa;
             clienteDB.Isento = cliente.Isento;
+            clienteDB.Senha = cliente.Senha;
+            clienteDB.confirmarSenha = cliente.confirmarSenha;
+            clienteDB.DtaNascimento = cliente.DtaNascimento;
+            clienteDB.DtaCadastro = cliente.DtaNascimento;
 
             _bancoContext.Cliente.Update(clienteDB);
             _bancoContext.SaveChanges();
             return clienteDB;
         }
+        public List<ClienteModel> VerificaEmailDB(string email, string documento, string inscricaoEstadual)
+        {
+            List<ClienteModel> clientesExistentes = _bancoContext.Cliente
+            .Where(c => c.Email == email || c.Documento == documento || c.InscricaoEstadual == inscricaoEstadual)
+            .ToList();
+            return clientesExistentes;
+        }
+
 
         public List<ClienteModel> FiltrarClientes(string Nome, string Email, string Telefone, DateTime DtaCadastro, bool Bloqueado)
         {
